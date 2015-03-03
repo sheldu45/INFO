@@ -12,55 +12,79 @@ public class PlateauCarre extends Plateau {
 	static int largeurCase = 50;
 	Case caseSelectionne ;
 	
-	public PlateauCarre(int largeurPlateau) {
-		super(largeurPlateau);
+	public PlateauCarre() {
+		super();
 		addMouseListener(this);
-		caseSelectionne = tab[5][3];
-		addMouseListener(this);
-		this.setPreferredSize(new Dimension(largeurCase*largeurPlateau, largeurCase*largeurPlateau));
+		//caseSelectionne = tab[5][3];
+		this.setPreferredSize(new Dimension(largeurCase*Partie.DimensionDesPlateaux, largeurCase*Partie.DimensionDesPlateaux));
 	}
+
 
 	@Override
 	public void paint(Graphics g) {
-		for(int y=0; y<largeurPlateau; y++){
-			for(int x=0; x<largeurPlateau; x++){
+
+		for(int y=0; y< Partie.DimensionDesPlateaux; y++){
+
+			for(int x=0; x<Partie.DimensionDesPlateaux; x++){
+
 				g.drawImage(tab[x][y].getImage(), x*largeurCase, y*largeurCase, largeurCase, largeurCase, null);
 
-				g.setColor(Color.RED);
 				if(tab[x][y].onADejaClique && tab[x][y].getBateau() == null){
 					g.drawImage(Case.croix, x*largeurCase, y*largeurCase, largeurCase, largeurCase, null);
 				}
+
 				if(tab[x][y].onADejaClique && tab[x][y].getBateau() != null){
 					g.drawImage(Case.explosion, x*largeurCase, y*largeurCase, largeurCase, largeurCase, null);
 				}
 
-				g.setColor(Color.RED);
+				/*g.setColor(Color.RED);
 				if (tab[x][y] == caseSelectionne) {
 				    g.drawRect(largeurCase * x,largeurCase * y,largeurCase-1 , largeurCase-1 );
 				    g.drawString("X",largeurCase * x + (1/2 * largeurCase ),largeurCase * y + (1/2 * largeurCase ));
-				}
+				}*/
+
 			}
-		}
-		
+		}	
 	}
 	
 	
 	
 	@Override
-	//ajoute si c'est possible, le bateau entre les positions X1,Y1 et X2,Y2
+	//ajoute si c'est possible, le bateau entre les positions (X1,Y1) et (X2,Y2)
 	public void ajouter(Bateau bateau, int X1, int Y1, int X2, int Y2) {
+
 		Case[] positions = new Case[bateau.taille];
-		if((X1==X2 && (Math.abs(Y2 - Y1)+1 == bateau.taille))){
-			for(int i = 0; i<bateau.taille; i++){
+		
+		//bateau vertical
+		if((X1==X2 && (Math.abs(Y2 - Y1)+1 == bateau.taille))){  //si un bateau est positionné entre la case 8 et 12, sa taille est de 5 (= 12-8 +1)
+		    if(Y2>Y1){
+		        for(int i = 0; i<bateau.taille; i++){
 				Case c = tab[X1][Y1+i];
 				positions[i] = c;
 			}
+		    }
+		    else{
+			for(int i = 0; i<bateau.taille; i++){
+			        Case c = tab[X1][Y1-i];
+				positions[i] = c;
+			}
+		    }
 		}
+
+		//bateau horizontal
 		if((Y1==Y2 && (Math.abs(X2 - X1)+1 == bateau.taille))){
+		    if(X2>X1){
 			for(int i = 0; i<bateau.taille; i++){
 				Case c = tab[X1+i][Y1];
 				positions[i] = c;
 			}
+		    }
+		    else{
+				for(int i = 0; i<bateau.taille; i++){
+				Case c = tab[X1-i][Y1];
+				positions[i] = c;
+			}
+		    }
 		}
 
 		super.ajouter(bateau, positions);
@@ -81,30 +105,33 @@ public class PlateauCarre extends Plateau {
        
 	
 
-	private int xDepart, yDepart ;
+    private int xDepart, yDepart ; // positions (x,y) en terme de cases (et non en terme de pixels) au moment de l'action "press"
 	@Override
 	public void mousePressed(MouseEvent e) {
-		System.out.println("llaaaaaaa" + "" + e.getX() / largeurCase +"" + e.getY() / largeurCase);
+	    //System.out.println("llaaaaaaa" + "" + e.getX() / largeurCase +"" + e.getY() / largeurCase);
 		this.xDepart = e.getX() / largeurCase;
 		this.yDepart = e.getY() / largeurCase;
 	}
 	
-	private int xArrive, yArrive ;	
+	private int xArrive, yArrive ;	// positions (x,y) en terme de cases (et non en terme de pixels) au moment de l'action "release"
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		System.out.println("à llaaaaaaa" + "" + e.getX() / largeurCase +"" + e.getY() / largeurCase);
+	    //System.out.println("à llaaaaaaa" + "" + e.getX() / largeurCase +"" + e.getY() / largeurCase);
 		this.xArrive = e.getX() / largeurCase;
 		this.yArrive = e.getY() / largeurCase;	
-		System.out.println();
+
+		//System.out.println();
 		this.ajouter(xDepart, yDepart, xArrive, yArrive);
 		this.repaint();
 	}
+
+
 
 	
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		
-		int x = e.getX();
+	    /*int x = e.getX();
 		int y = e.getY();
 		int col = x/largeurCase;
 		int lig = y/largeurCase;
@@ -115,13 +142,11 @@ public class PlateauCarre extends Plateau {
 		if( !  tab[col][lig].onADejaClique){
 			this.tab[col][lig].tirer();
 			this.repaint();
-		}
+			}*/
 		
 		
 		
 	}
-
-	
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
@@ -189,7 +214,7 @@ public class PlateauCarre extends Plateau {
     public static void main(String[] gtezyhfjkg){
 
     JFrame f = new JFrame();
-	PlateauCarre pq = new PlateauCarre(10);
+	PlateauCarre pq = new PlateauCarre();
 
 	Bateau b1 = new Bateau (3);
 	Bateau b2 = new Bateau (2);
@@ -211,7 +236,7 @@ public class PlateauCarre extends Plateau {
 
 
 
-        f.setSize(new Dimension(pq.largeurPlateau * largeurCase,pq.largeurPlateau * largeurCase));
+        f.setSize(new Dimension(Partie.DimensionDesPlateaux * largeurCase, Partie.DimensionDesPlateaux * largeurCase));
         
 	f.setContentPane(pq);
 	f.repaint();
