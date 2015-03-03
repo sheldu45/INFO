@@ -10,9 +10,7 @@ import javax.swing.JPanel;
 public abstract class Plateau extends JPanel implements MouseListener {
 
 
-    int largeurPlateau;
 	Case[][] tab ;
-	
 	Flotte listeDesBateaux = new Flotte();
 	
 	boolean phaseDePositionnement ;
@@ -20,11 +18,10 @@ public abstract class Plateau extends JPanel implements MouseListener {
 	boolean finDeLaPartie = this.listeDesBateaux.isEmpty() ;
 	
 	//Instancie un bateau de taille et nombre de bateaux donnés
-	public Plateau(int largeurPlateau) {
-		this.largeurPlateau 		= largeurPlateau;
-		this.tab = new Case[largeurPlateau][largeurPlateau];
-		for(int i = 0; i < largeurPlateau; i++){
-			for(int j = 0; j < largeurPlateau; j++){
+	public Plateau() {
+		this.tab = new Case[Partie.DimensionDesPlateaux][Partie.DimensionDesPlateaux];
+		for(int i = 0; i < Partie.DimensionDesPlateaux; i++){
+			for(int j = 0; j < Partie.DimensionDesPlateaux; j++){
 				tab[i][j] = new Case(this);
 			}
 		}
@@ -54,20 +51,20 @@ public abstract class Plateau extends JPanel implements MouseListener {
 	
 
 	//Permet d'ajouter un Bateau à un ensemble de positions données (à condition que ces positions soient libre)
-	public void ajouter(Bateau bateau, Case[] positions){
+	protected void ajouter(Bateau bateau, Case[] positions){
 	
 	    if(bateau.estEnMer == false){
-	       if (sontVides(positions)){
-	    	   bateau.estEnMer = true ;
-	    	   for (int i = 0; i < bateau.taille; i++) {	
-	    		   bateau.positions[i] = positions[i];			//on donne au bateau les positions en argument
-	    		   bateau.positions[i].setBateau(bateau);		//on fait pointer vers le bateau chacune des cases sur lesquels est le bateau
-	    	   }
-	       }
-	    }
-	    System.out.println(listeDesBateaux.nombreDeBateauxNonPlaces());
+		if (sontVides(positions)){
+		    bateau.estEnMer = true ;
+		    for (int i = 0; i < bateau.taille; i++) {	
+	    		bateau.positions[i] = positions[i];		//on donne au bateau les positions en argument
+	    	        bateau.positions[i].setBateau(bateau);		//on fait pointer vers le bateau chacune des cases sur lesquels est le bateau
+		    }
+		}
+	    //System.out.println(listeDesBateaux.nombreDeBateauxNonPlaces());
 	    this.listeDesBateaux.mettreAJourSelection();
 	    Partie.fenetreDeJeu.repaint();
+	    }
 	}
 	
 	//ajoute si c'est possible, le bateau entre les positions X1,Y1 et X2,Y2
