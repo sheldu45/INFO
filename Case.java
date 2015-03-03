@@ -4,10 +4,10 @@ import javax.swing.ImageIcon;
 
 public class Case {
 	
-	static Image mer = new ImageIcon("Images/Mer.jpg").getImage();
-	static Image bat = new ImageIcon("Images/Bat.jpg").getImage();    
-	static Image croix = new ImageIcon("Images/Croix.png").getImage();
-	static Image explosion = new ImageIcon("Images/Explosion.png").getImage();
+	static Image mer = new ImageIcon("Mer.jpg").getImage();
+	static Image bat = new ImageIcon("Bat.jpg").getImage();    
+	static Image croix = new ImageIcon("Croix.png").getImage();
+	static Image explosion = new ImageIcon("Explosion.png").getImage();
 	
  
 
