@@ -9,18 +9,15 @@ import javax.swing.JPanel;
 @SuppressWarnings("serial")
 public abstract class Plateau extends JPanel implements MouseListener {
 
-    /**
-       tableau bidimensionnel de cases qui représente le plateau
-    */
+    
+    //tableau bidimensionnel de cases qui représente le plateau
     Case[][] tab ;
-    /**
-       liste des bateaux 
-     */
-    Flotte listeDesBateaux = new Flotte();
+    //liste des bateaux 
+    Flotte listeDesBateaux;
 	
     boolean phaseDePositionnement ;
     boolean visible ;
-    boolean finDeLaPartie = this.listeDesBateaux.isEmpty() ;
+    boolean finDeLaPartie /*= this.listeDesBateaux.isEmpty()*/ ;
 	
     /**
 
@@ -34,6 +31,9 @@ public abstract class Plateau extends JPanel implements MouseListener {
 		tab[i][j] = new Case(this);
 	    }
 	}
+	this.listeDesBateaux 		=  new Flotte();
+	this.phaseDePositionnement 	= true;
+	this.finDeLaPartie 			= false;
     }
 
 
