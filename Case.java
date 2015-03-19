@@ -46,7 +46,8 @@ public class Case {
 		return null;
 	}
 
-	public void tirer(){
+	//Une verification en amont a déja été faite : on n'a pas encore cliqué sur cette case
+	public void tirer() {
 		this.onADejaClique = true ;		//On ne pourra plus cliquer sur cette case
 		if(this.bateau != null){
 			this.bateau.touche(this);	//S'il y a un bateau on effectue dessus l'action touche() 
@@ -54,7 +55,6 @@ public class Case {
 				this.univers.listeDesBateaux.remove(this.bateau);	//si le bateau en question est coulé, on l'enlève de la liste des bateaux
 			}
 		}
-		
 	}
 
 }
