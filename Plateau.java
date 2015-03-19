@@ -120,34 +120,36 @@ public abstract class Plateau extends JPanel implements MouseListener {
          * @param x abscisse de la case cliquée
          * @param y ordonnée de la case cliquée
          */
+
+
+
         //la fonction tirer ne sera de toute façon appellée QUE sur des cases qu'on n'a pas deja touché ??
 	public void tirer (int x, int y) {
-            
-		assert tab[x][y].onADejaClique == false : "la fonction tirer ne doit être appellée QUE sur des cases qu'on n'a pas deja touché";
-                
-                // la fonction tirer() de la case tab[x][y] change le boolean OnADejaClique de tab[x][y] en true
-                // Elle execute la fonction touche() du bateau en question
-                // Si la portion touchée était la dernière portion non touchée du bateau, elle coule le bateau et la retire
-                // de la liste générale des bateau 
-                tab[x][y].tirer();
-                
-                //si un bateau se trouve sur cette case, "TOUCHE !"
-                if(this.tab[x][y].getBateau() != null){
-                    
-			Bateau bateau = this.tab[x][y].getBateau();
-			Case caseTouchee = tab[x][y];
-                        
-			//On cherche l'indice des positions du bateau qui correspond à la case touchée
-			for(int i = 0; i < bateau.taille; i++ ){
-				if(bateau.positions[i] == caseTouchee){
-				//à l'indice obtenu, on change le booleen de la case à l'indice i du 
-                                //tableau caseTouchees en true
-					bateau.casesTouchees[i] = true ;
+		if(tab[x][y].onADejaClique == false){
+		        // la fonction tirer() de la case tab[x][y] change le boolean OnADejaClique de tab[x][y] en true
+		        // Elle execute la fonction touche() du bateau en question
+		        // Si la portion touchée était la dernière portion non touchée du bateau, elle coule le bateau et la retire
+		        // de la liste générale des bateau 	        
+			tab[x][y].tirer();
+		        
+		        //si un bateau se trouve sur cette case, "TOUCHE !"
+		        if(this.tab[x][y].getBateau() != null){
+		            
+				Bateau bateau = this.tab[x][y].getBateau();
+				Case caseTouchee = tab[x][y];
+		                
+				//On cherche l'indice des positions du bateau qui correspond à la case touchée
+				for(int i = 0; i < bateau.taille; i++ ){
+					if(bateau.positions[i] == caseTouchee){
+					//à l'indice obtenu, on change le booleen de la case à l'indice i du 
+		                        //tableau caseTouchees en true
+						bateau.casesTouchees[i] = true ;
+					}
 				}
 			}
+			this.repaint();
+			Partie.incrTourDuJoueur();
 		}
-
-
 	}
 	
 	
