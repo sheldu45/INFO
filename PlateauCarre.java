@@ -44,7 +44,7 @@ public class PlateauCarre extends Plateau {
 			for(int x=0; x<Partie.DimensionDesPlateaux; x++){
 
 				// la fonction getImage() de case retourne 				
-	            // l'image dela mer s'il n'y a pas de bateau et l'image d'un bateau s'il y en a un.
+	            		// l'image dela mer s'il n'y a pas de bateau et l'image d'un bateau s'il y en a un.
 				
 				if(this.visible){
 					g.drawImage(tab[x][y].getImage(), x*largeurCase, y*largeurCase, largeurCase, largeurCase, null);
@@ -187,21 +187,17 @@ public class PlateauCarre extends Plateau {
 	
 	public void mouseClicked(MouseEvent e) {
 		
-	    /*int x = e.getX();
+	    	int x = e.getX();
 		int y = e.getY();
 		int col = x/largeurCase;
 		int lig = y/largeurCase;
 		
-		caseSelectionne = tab[col][lig];
-		System.out.println(col + lig);
-		
-		if( !  tab[col][lig].onADejaClique){
-			this.tab[col][lig].tirer();
-			this.repaint();
-			}*/
-		
-		
-		
+		/*caseSelectionne = tab[col][lig];
+		System.out.println(col + lig);*/
+
+		if(!phaseDePositionnement && !this.visible){
+			this.tirer(col, lig);
+		}			
 	}
 
 	
