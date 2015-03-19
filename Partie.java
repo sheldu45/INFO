@@ -8,6 +8,8 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import java.lang.Thread;
+
 
 public class Partie {
 	
@@ -15,21 +17,26 @@ public class Partie {
 	 * 
 	 */
 	
-	public static JFrame fenetreDeJeu	; 	//C'est la fenetre de jeu, à tout moment, partout, on pourra utiliser "Partie.fenetreDeJeu.repaint()"
+	public static 	JFrame fenetreDeJeu	; 	//C'est la fenetre de jeu, à tout moment, partout, on pourra utiliser "Partie.fenetreDeJeu.repaint()"
+	static int	tourDuJoueur		; 	//1 au tour du Joueur1 et 2 au tour du Joueur2
+	static void 	incrTourDuJoueur(){
+		if(tourDuJoueur == 1) {tourDuJoueur = 2;}
+		else {tourDuJoueur = 1;}
+	}
 
-	
-	
-	static int 		DimensionDesPlateaux  = 10 ;	
+
+	static int 	DimensionDesPlateaux  = 10 ;	
+
 		
 	private int 	typeDePartie 	; 	// '1' <=> vs ordinateur 	; '2' <=> joueur1 vs joueur2	//mais il serait aussi possible d'imaginer une classe abstraite Partie et deux sous classes		
 	
-	private int 	typeDeCases		;	//	'4' <=> carré 			; '6' <=> hexagonal
+	private int 	typeDeCases	;	//	'4' <=> carré 		; '6' <=> hexagonal
 	
 	private int[]	typeDeFlotte	;	//tableau d'entiers : à la i-ème case est indiqué le nombre de bateaux de taille i par joueur
 
 	private int     phaseDeLaPartie	;	//0 durant la phase du placement 1 durant la phase de jeu et 2 durant la phase de partie terminée
 	
-	private int		tourDuJoueur	; 	//1 au tour du Joueur1 et 2 au tour du Joueur2
+	
 	
 	private Plateau plateauDuJoueur1	;	//plateau du joueur1
 	
@@ -42,13 +49,13 @@ public class Partie {
 	
 	public Partie(int typeDePartie, int typeDeCases, int[] typeDeFlotte){
 
-		assert typeDeFlotte[0]  == 0 : 	"car il doit y avoir 0 bateaux de taille 0 ! typeDeFlotte est un tableau qui à chaque indice i indique le nombre de bateaux de taille i par joueur ";
+	    assert typeDeFlotte[0]  == 0 : 	"car il doit y avoir 0 bateaux de taille 0 ! typeDeFlotte est un tableau qui à chaque indice i indique le nombre de bateaux de taille i par joueur ";
 	    assert typeDeFlotte[1]  == 0 : 	"car il doit y avoir 0 bateaux de taille 1 ! ";
 		
 		this.typeDePartie 		= typeDePartie;
 		this.typeDeCases 		= typeDeCases;
 		this.typeDeFlotte 		= typeDeFlotte;
-		this.phaseDeLaPartie	= 0;
+		this.phaseDeLaPartie		= 0;
 		this.tourDuJoueur 		= 1;
 		
 		switch(typeDeCases){			// 4 pour des cases carrées	;	6 pour des cases hexagonales 
@@ -109,20 +116,47 @@ public class Partie {
 			case 2 :
 				
 				miseEnPlace(1);
+				try {
+    					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+    				e.printStackTrace();
+				}
 				miseEnPlace(2);
+				try {
+    					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+    				e.printStackTrace();
+				}
 				this.phaseDeLaPartie = 1;
 				
 				break;
 				
 				
 		}
-						fenetreDeJeu.setBackground(Color.BLACK);
-						GridLayout gl = new GridLayout(1, 2);
-						gl.setHgap(10);
-						fenetreDeJeu.setLayout(gl);
+					fenetreDeJeu.setBackground(Color.BLACK);
+					GridLayout gl = new GridLayout(1, 2);
+					gl.setHgap(10);
+					fenetreDeJeu.setLayout(gl);
 		//quand PhaseDeLaPartie sera 2, on passera à la phase de partie terminée ; tant qu'elle est 1, c'est la phase de jeu
 		while(phaseDeLaPartie == 1){
-			tour(1);
+			try {
+				while(tourDuJoueur == 1){
+					tour(1);
+					Thread.sleep(1000);
+				}
+				fenetreDeJeu.remove(plateauDuJoueur1);
+				fenetreDeJeu.remove(plateauDuJoueur2);
+
+				while(tourDuJoueur == 2){
+					tour(2);
+					Thread.sleep(1000);
+				}
+				fenetreDeJeu.remove(plateauDuJoueur1);
+				fenetreDeJeu.remove(plateauDuJoueur2);
+			}
+			catch (InterruptedException e) {
+    				e.printStackTrace();
+			}
 		}
 		
 		//c'est la fin de la partie, voulez-vous rejouer?
@@ -160,7 +194,7 @@ public class Partie {
 		
 		if (joueur == 2){ 
 			plateauDuJoueur2.visible = true ;
-		    plateauDuJoueur2.setMinimumSize(new Dimension(Partie.DimensionDesPlateaux*PlateauCarre.largeurCase, Partie.DimensionDesPlateaux*PlateauCarre.largeurCase));
+		    	plateauDuJoueur2.setMinimumSize(new Dimension(Partie.DimensionDesPlateaux*PlateauCarre.largeurCase, Partie.DimensionDesPlateaux*PlateauCarre.largeurCase));
 			plateauDuJoueur2.setPreferredSize(new Dimension(Partie.DimensionDesPlateaux*PlateauCarre.largeurCase, Partie.DimensionDesPlateaux*PlateauCarre.largeurCase));
 			
 			JPort  port2    = new JPort(plateauDuJoueur2.listeDesBateaux);
@@ -182,8 +216,7 @@ public class Partie {
 			fenetreDeJeu.remove(port2);
 		}
 		
-	}
-	
+	}	
 	
 	public void tour(int joueur){
 		
@@ -200,7 +233,23 @@ public class Partie {
 			fenetreDeJeu.add(plateauDuJoueur2);
 			
 			fenetreDeJeu.pack();
-		    fenetreDeJeu.repaint();
+		    	fenetreDeJeu.repaint();
+		}
+
+		if (tourDuJoueur == 2){ 
+			plateauDuJoueur2.visible = true ;
+			plateauDuJoueur1.visible = false ;
+			
+			plateauDuJoueur2.setMinimumSize(new Dimension(Partie.DimensionDesPlateaux*PlateauCarre.largeurCase, Partie.DimensionDesPlateaux*PlateauCarre.largeurCase));
+			plateauDuJoueur2.setPreferredSize(new Dimension(Partie.DimensionDesPlateaux*PlateauCarre.largeurCase, Partie.DimensionDesPlateaux*PlateauCarre.largeurCase));
+			plateauDuJoueur1.setMinimumSize(new Dimension(Partie.DimensionDesPlateaux*PlateauCarre.largeurCase, Partie.DimensionDesPlateaux*PlateauCarre.largeurCase));
+			plateauDuJoueur1.setPreferredSize(new Dimension(Partie.DimensionDesPlateaux*PlateauCarre.largeurCase, Partie.DimensionDesPlateaux*PlateauCarre.largeurCase));
+			
+			fenetreDeJeu.add(plateauDuJoueur2);
+			fenetreDeJeu.add(plateauDuJoueur1);
+			
+			fenetreDeJeu.pack();
+		    	fenetreDeJeu.repaint();
 		}
 	}
 	
